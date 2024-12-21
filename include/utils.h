@@ -20,12 +20,46 @@ enum FeatureType {
     SP = 3
 };
 
-struct options
-{
-    cv::Mat image;
-    std::string filename;
-    std::vector<float> params;
-    FeatureType feature_type;
+/**
+ * @brief Structure to hold options for image processing.
+ */
+struct options {
+    cv::Mat image;                  ///< Image to be processed
+    std::string filename;           ///< Filename associated with the image
+    std::vector<float> params;      ///< Parameters for processing
+    FeatureType feature_type;       ///< Type of feature to be used
+};
+
+/**
+ * @brief ImageProcessor class to process images.
+ *
+ * This class takes a configuration file and an image path in its constructor.
+ * The process method can then be used to process the image according to the
+ * configuration and the options provided.
+ */
+class ImageProcessor {
+public:
+    /**
+     * @brief Constructor to create an ImageProcessor object.
+     *
+     * @param config The configuration file for the image processing.
+     * @param img_path The path to the image to be processed.
+     */
+    ImageProcessor(const std::string &config, const std::string &img_path);
+    /**
+     * @brief Destructor to free any resources used by the ImageProcessor.
+     */
+    ~ImageProcessor();
+    /**
+     * @brief Process an image according to the configuration and options.
+     *
+     * @param opts The options for the image processing.
+     * @return The processed image.
+     */
+    cv::Mat process(const options &opts);
+private:
+    std::shared_ptr<float*> params; ///< Parameters for processing
+    std::shared_ptr<cv::Mat> p_img; ///< The image to be processed
 };
 
 #endif
