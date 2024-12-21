@@ -34,6 +34,17 @@ jobs:
           channels: conda-forge
           channel-priority: strict
 
+      - name: Install dependencies
+        run: |
+          conda install conda-build conda-verify pytest toml
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            conda install -c conda-forge opencv
+          elif [[ "$RUNNER_OS" == "macOS" ]]; then
+            conda install -c conda-forge opencv
+          elif [[ "$RUNNER_OS" == "Windows" ]]; then
+            conda install -c conda-forge opencv
+          fi
+
       # Currently conda-build requires the dead package "toml" but doesn't declare it
       - name: Prepare
         run: conda install conda-build conda-verify pytest toml
@@ -42,7 +53,7 @@ jobs:
         run: conda build conda.recipe
 
       - name: Install
-        run: conda install -c ${CONDA_PREFIX}/conda-bld/ cmake_example
+        run: conda install -c ${CONDA_PREFIX}/conda-bld/ binding_demo
 
       - name: Test
         run: python -m pytest
