@@ -34,6 +34,17 @@ pip install -e .
 With the `setup.py` file included in this example, the `pip install` command will
 invoke CMake and build the pybind11 module as specified in `CMakeLists.txt`.
 
+## Test
+
+```bash
+python -m pytest
+```
+
+## Format code
+
+```bash
+pre-commit run -a  # pip install pre-commit
+```
 
 ## License
 
