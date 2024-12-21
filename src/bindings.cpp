@@ -7,7 +7,6 @@
 
 namespace py = pybind11;
 
-
 cv::Mat numpy_to_mat(py::array_t<uint8_t> input) {
     py::buffer_info buf = input.request();
     cv::Mat mat(buf.shape[0], buf.shape[1], CV_8UC3, (uint8_t*)buf.ptr);
@@ -41,18 +40,19 @@ private:
 };
 
 ImageProcessor::ImageProcessor(const std::string &config) {
+    // demo inputs
     params = std::make_shared<float*>(new float[10]);
-    std::string img_path = "/teamspace/studios/this_studio/tmp/mini_demo_pybind11/demo/93341989_396310999.jpg";
+    const std::string &img_path = "/workspaces/pybind11_demo/demo/93341989_396310999.jpg";
     cv::Mat img = cv::imread(img_path, cv::IMREAD_UNCHANGED);
     p_img = std::make_shared<cv::Mat>(img);
 }
-
 
 cv::Mat ImageProcessor::process(const options &opts) {
     return *p_img;
 }
 
-
+ImageProcessor::~ImageProcessor() {
+}
 
 void BindOptions(py::module &m) {
     py::class_<options>(m, "options")
@@ -63,6 +63,7 @@ void BindOptions(py::module &m) {
             [](options &o) { return mat_to_numpy(o.image); },
             [](options &o, py::array_t<uint8_t> img) { o.image = numpy_to_mat(img); });
 }
+
 void BindImageProcessor(py::module &m) {
     py::class_<ImageProcessor>(m, "ImageProcessor")
         .def(py::init<const std::string &>())
@@ -71,7 +72,8 @@ void BindImageProcessor(py::module &m) {
         });
 }
 
-PYBIND11_MODULE(example, m) {
+PYBIND11_MODULE(binding_demo, m) {
+    m.doc() = "pybind11 demo plugin";
     BindOptions(m);
     BindImageProcessor(m);
 }
