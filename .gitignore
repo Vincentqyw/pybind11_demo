@@ -26,3 +26,9 @@ gen_example.py
 datasets/lines/terrace0.JPG
 datasets/lines/terrace1.JPG
 datasets/South-Building*
+tests/output.jpg
+build_and_run1.sh
+.ruff_cache*
+.mypy*
+.pytest*
+.conda.recipe*

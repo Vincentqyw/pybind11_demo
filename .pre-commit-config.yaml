@@ -4,6 +4,10 @@
 #
 # Or:
 #
+#     pre-commit run --all-files
+#
+# Or:
+#
 #     pre-commit install  # (runs every time you commit in git)
 #
 # To update this file:
