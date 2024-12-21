@@ -25,11 +25,6 @@ class CMakeExtension(Extension):
         self.sourcedir = os.fspath(Path(sourcedir).resolve())
 
 
-def parse_requirements(filename):
-    with open(filename, "r") as f:
-        return f.read().splitlines()
-
-
 class CMakeBuild(build_ext):
     def build_extension(self, ext: CMakeExtension) -> None:
         # Must be in this form due to bug in .resolve() only fixed in Python 3.10+

@@ -58,7 +58,7 @@ void BindOptions(py::module &m) {
         .def(py::init<>())
         .def_readwrite("filename", &options::filename)
         .def_readwrite("params", &options::params)
-        .def_property("image", 
+        .def_property("image",
             [](options &o) { return mat_to_numpy(o.image); },
             [](options &o, py::array_t<uint8_t> img) { o.image = numpy_to_mat(img); });
 }
