@@ -1,6 +1,7 @@
-import cv2
-import binding_demo
 from pathlib import Path
+
+import binding_demo
+import cv2
 
 TEST_ROOT = Path(__file__).parent
 
@@ -21,7 +22,7 @@ def test_main():
     processed_image = processor.process(opts)
 
     status = cv2.imwrite("output.jpg", processed_image)
-    assert status == True
+    assert status
 
     diff = (img2 - processed_image).sum()
     assert diff == 0
