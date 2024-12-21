@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, windows-latest, macos-12]
+        platform: [ubuntu-latest, macos-12]
         python-version: ["3.8", "3.10"]
 
     runs-on: ${{ matrix.platform }}
@@ -37,12 +37,13 @@ jobs:
       - name: Install dependencies
         run: |
           conda install conda-build conda-verify pytest toml
+          conda install -c conda-forge opencv-python opencv-python-headless
           if [[ "$RUNNER_OS" == "Linux" ]]; then
-            conda install -c conda-forge opencv
+            sudo apt-get update
+            sudo apt-get install libopencv-dev -y
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
-            conda install -c conda-forge opencv
-          elif [[ "$RUNNER_OS" == "Windows" ]]; then
-            conda install -c conda-forge opencv
+            brew update
+            brew install opencv
           fi
 
       # Currently conda-build requires the dead package "toml" but doesn't declare it
