@@ -36,3 +36,14 @@ def test_main():
     # Check that the processed image is the same as the test image
     diff = (img2 - processed_image).sum()
     assert diff == 0
+
+    # Check that the forward function works
+    forward_output = processor.forward(opts)
+
+    buffer_a = [1, 2, 3]
+    buffer_b = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    buffer_c = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    assert forward_output.vbuffer_a == buffer_a
+    assert forward_output.vvbuffer_b == buffer_b
+    assert forward_output.vbuffer_c == buffer_c

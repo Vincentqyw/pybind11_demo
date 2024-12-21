@@ -31,6 +31,15 @@ struct options {
 };
 
 /**
+ * @brief Structure to hold forward outputs.
+ */
+struct ForwardType {
+    std::vector<uint8_t> vbuffer_a;
+    std::vector<std::vector<uint8_t>> vvbuffer_b;
+    std::vector<uint8_t> vbuffer_c;
+};
+
+/**
  * @brief ImageProcessor class to process images.
  *
  * This class takes a configuration file and an image path in its constructor.
@@ -57,9 +66,21 @@ public:
      * @return The processed image.
      */
     cv::Mat process(const options &opts);
+
+    /**
+     * @brief Forward an image according to the configuration and options.
+     *
+     * @param opts The options for the image processing.
+     * @return The forward outputs.
+     */
+    ForwardType forward(const options &opts);
+
 private:
     std::shared_ptr<float*> params; ///< Parameters for processing
     std::shared_ptr<cv::Mat> p_img; ///< The image to be processed
+    std::vector<uint8_t> vbuffer_a;
+    std::vector<std::vector<uint8_t>> vvbuffer_b;
+    std::vector<uint8_t> vbuffer_c;
 };
 
 #endif

@@ -76,6 +76,18 @@ cv::Mat ImageProcessor::process(const options &opts) {
     return *p_img;
 }
 
+ForwardType ImageProcessor::forward(const options &opts) {
+    // For now, just return the original image.
+    // In the future, this function should be implemented to process the image
+    // according to the configuration and options.
+    ForwardType forward_output;
+    forward_output.vbuffer_a = {1, 2, 3};
+    forward_output.vvbuffer_b = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    forward_output.vbuffer_c = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    return forward_output;
+}
+
+
 /**
  * @brief Destructor to free any resources used by the ImageProcessor.
  */
@@ -135,6 +147,15 @@ void BindOptions(py::module &m) {
         });
 }
 
+void BindForwardType(py::module &m) {
+    py::class_<ForwardType>(m, "ForwardType")
+        .def(py::init<>())
+        .def_readwrite("vbuffer_a", &ForwardType::vbuffer_a)
+        .def_readwrite("vvbuffer_b", &ForwardType::vvbuffer_b)
+        .def_readwrite("vbuffer_c", &ForwardType::vbuffer_c);
+}
+
+
 /**
  * @brief Binds the ImageProcessor class to the given module.
  *
@@ -157,5 +178,12 @@ void BindImageProcessor(py::module &m) {
         // Call the process method on the ImageProcessor object
         // and convert the result to a numpy array
         return mat_to_numpy(self.process(opts));
+    }, py::arg("opts"));
+
+    // Add a forward method
+    image_processor_class.def("forward", [](ImageProcessor &self, const options &opts) {
+        // Call the forward method on the ImageProcessor object
+        // and convert the result to a numpy array
+        return self.forward(opts);
     }, py::arg("opts"));
 }
