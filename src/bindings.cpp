@@ -31,7 +31,7 @@ struct options
 
 class ImageProcessor {
 public:
-    ImageProcessor(const std::string &config);
+    ImageProcessor(const std::string &config, const std::string &img_path);
     ~ImageProcessor();
     cv::Mat process(const options &opts);
 private:
@@ -39,10 +39,9 @@ private:
     std::shared_ptr<cv::Mat> p_img;
 };
 
-ImageProcessor::ImageProcessor(const std::string &config) {
+ImageProcessor::ImageProcessor(const std::string &config, const std::string &img_path) {
     // demo inputs
     params = std::make_shared<float*>(new float[10]);
-    const std::string &img_path = "/workspaces/pybind11_demo/demo/93341989_396310999.jpg";
     cv::Mat img = cv::imread(img_path, cv::IMREAD_UNCHANGED);
     p_img = std::make_shared<cv::Mat>(img);
 }
@@ -66,7 +65,7 @@ void BindOptions(py::module &m) {
 
 void BindImageProcessor(py::module &m) {
     py::class_<ImageProcessor>(m, "ImageProcessor")
-        .def(py::init<const std::string &>())
+        .def(py::init<const std::string &, const std::string &>())
         .def("process", [](ImageProcessor &self, const options &opts) {
             return mat_to_numpy(self.process(opts));
         });
