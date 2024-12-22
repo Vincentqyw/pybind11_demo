@@ -2,10 +2,10 @@
 
 namespace py = pybind11;
 
-void BindFeatureType(py::module &m);
-void BindOptions(py::module &m);
-void BindForwardType(py::module &m);
-void BindImageProcessor(py::module &m);
+void BindFeatureType(py::module& m);
+void BindOptions(py::module& m);
+void BindForwardType(py::module& m);
+void BindImageProcessor(py::module& m);
 
 PYBIND11_MODULE(binding_demo, m) {
     /**
