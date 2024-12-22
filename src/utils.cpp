@@ -65,22 +65,22 @@ ImageProcessor::ImageProcessor(const std::string& config, const std::string& img
 }
 
 /**
- * @brief Process an image according to the configuration and options.
+ * @brief Process an image according to the configuration and Options.
  *
- * @param opts the options for the image processing.
+ * @param opts the Options for the image processing.
  * @return the processed image.
  */
-cv::Mat ImageProcessor::process(const options& opts) {
+cv::Mat ImageProcessor::process(const Options& opts) {
     // For now, just return the original image.
     // In the future, this function should be implemented to process the image
-    // according to the configuration and options.
+    // according to the configuration and Options.
     return *p_img;
 }
 
-ForwardType ImageProcessor::forward(const options& opts) {
+ForwardType ImageProcessor::forward(const Options& opts) {
     // For now, just return the original image.
     // In the future, this function should be implemented to process the image
-    // according to the configuration and options.
+    // according to the configuration and Options.
     ForwardType forward_output;
     forward_output.vbuffer_a  = {1, 2, 3};
     forward_output.vvbuffer_b = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
@@ -115,33 +115,33 @@ void BindFeatureType(py::module& m) {
 }
 
 /**
- * @brief Binds the options class to the given module.
+ * @brief Binds the Options class to the given module.
  *
  * @param m the module to which the class will be bound.
  */
 void BindOptions(py::module& m) {
-    // Create a pybind11 class_ object for the options class
+    // Create a pybind11 class_ object for the Options class
     // and bind it to the module.
-    py::class_<options> options_class(m, "options");
+    py::class_<Options> options_class(m, "Options");
 
     // Add a docstring to the class
-    options_class.doc() = "A class to represent options";
+    options_class.doc() = "A class to represent Options";
 
     // Add an __init__ method
     options_class.def(py::init<>());
 
     // Add readwrite properties
-    options_class.def_readwrite("filename", &options::filename);
-    options_class.def_readwrite("params", &options::params);
+    options_class.def_readwrite("filename", &Options::filename);
+    options_class.def_readwrite("params", &Options::params);
 
     // Add a property for the image
     options_class.def_property(
         "image",
-        [](options& o) {  // getter
+        [](Options& o) {  // getter
             // Convert the image to a numpy array
             return mat_to_numpy(o.image);
         },
-        [](options& o, py::array_t<uint8_t> img) {  // setter
+        [](Options& o, py::array_t<uint8_t> img) {  // setter
             // Convert the numpy array to an image
             o.image = numpy_to_mat(img);
         });
@@ -176,7 +176,7 @@ void BindImageProcessor(py::module& m) {
     // Add a process method
     image_processor_class.def(
         "process",
-        [](ImageProcessor& self, const options& opts) {
+        [](ImageProcessor& self, const Options& opts) {
             // Call the process method on the ImageProcessor object
             // and convert the result to a numpy array
             return mat_to_numpy(self.process(opts));
@@ -186,7 +186,7 @@ void BindImageProcessor(py::module& m) {
     // Add a forward method
     image_processor_class.def(
         "forward",
-        [](ImageProcessor& self, const options& opts) {
+        [](ImageProcessor& self, const Options& opts) {
             // Call the forward method on the ImageProcessor object
             // and convert the result to a numpy array
             return self.forward(opts);

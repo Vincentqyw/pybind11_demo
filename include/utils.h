@@ -17,9 +17,9 @@ py::array_t<uint8_t> mat_to_numpy(const cv::Mat& mat);
 enum FeatureType { HOG = 0, SIFT = 1, SURF = 2, SP = 3 };
 
 /**
- * @brief Structure to hold options for image processing.
+ * @brief Structure to hold Options for image processing.
  */
-struct options {
+struct Options {
     cv::Mat image;              ///< Image to be processed
     std::string filename;       ///< Filename associated with the image
     std::vector<float> params;  ///< Parameters for processing
@@ -40,7 +40,7 @@ struct ForwardType {
  *
  * This class takes a configuration file and an image path in its constructor.
  * The process method can then be used to process the image according to the
- * configuration and the options provided.
+ * configuration and the Options provided.
  */
 class ImageProcessor {
       public:
@@ -56,20 +56,20 @@ class ImageProcessor {
      */
     ~ImageProcessor();
     /**
-     * @brief Process an image according to the configuration and options.
+     * @brief Process an image according to the configuration and Options.
      *
-     * @param opts The options for the image processing.
+     * @param opts The Options for the image processing.
      * @return The processed image.
      */
-    cv::Mat process(const options& opts);
+    cv::Mat process(const Options& opts);
 
     /**
-     * @brief Forward an image according to the configuration and options.
+     * @brief Forward an image according to the configuration and Options.
      *
-     * @param opts The options for the image processing.
+     * @param opts The Options for the image processing.
      * @return The forward outputs.
      */
-    ForwardType forward(const options& opts);
+    ForwardType forward(const Options& opts);
 
       private:
     std::shared_ptr<float*> params;  ///< Parameters for processing

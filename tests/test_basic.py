@@ -17,8 +17,8 @@ def test_main():
     img1 = cv2.imread(img1_path)
     img2 = cv2.imread(img2_path)
 
-    # Create an options object
-    opts = binding_demo.options()
+    # Create an Options object
+    opts = binding_demo.Options()
     opts.image = img1
     opts.filename = "111"
     opts.params = [0.1, 0.2, 0.3]

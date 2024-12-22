@@ -1,4 +1,4 @@
-# small demo for pybind11
+# Tiny demo for pybind11
 
 An example [pybind11](https://github.com/pybind/pybind11) module built with a
 CMake-based build system. This is useful for C++ codebases that have an

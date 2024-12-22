@@ -9,7 +9,7 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bindings_demo"
+name = "binding_demo"
 version = "0.0.1"
 description = "binding demo"
 readme = "README.md"
