@@ -17,8 +17,8 @@ def test_main():
     img1 = cv2.imread(img1_path)
     img2 = cv2.imread(img2_path)
 
-    # Create an options object
-    opts = binding_demo.options()
+    # Create an Options object
+    opts = binding_demo.Options()
     opts.image = img1
     opts.filename = "111"
     opts.params = [0.1, 0.2, 0.3]
@@ -36,3 +36,14 @@ def test_main():
     # Check that the processed image is the same as the test image
     diff = (img2 - processed_image).sum()
     assert diff == 0
+
+    # Check that the forward function works
+    forward_output = processor.forward(opts)
+
+    buffer_a = [1, 2, 3]
+    buffer_b = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    buffer_c = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    assert forward_output.vbuffer_a == buffer_a
+    assert forward_output.vvbuffer_b == buffer_b
+    assert forward_output.vbuffer_c == buffer_c

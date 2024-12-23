@@ -1,9 +1,10 @@
-#include <string>
-#include <vector>
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include <pybind11/numpy.h>
+
 #include <opencv2/opencv.hpp>
+#include <string>
+#include <vector>
 #include "include/utils.h"
 
 namespace py = pybind11;
@@ -37,13 +38,13 @@ cv::Mat numpy_to_mat(py::array_t<uint8_t> input) {
  * @param mat the cv::Mat object to convert.
  * @return the converted pybind11 numpy array.
  */
-py::array_t<uint8_t> mat_to_numpy(const cv::Mat &mat) {
+py::array_t<uint8_t> mat_to_numpy(const cv::Mat& mat) {
     // Create a pybind11 numpy array from the cv::Mat object.
-    // The constructor of pybind11 numpy array takes a shape and a pointer to the memory block.
-    // The shape is the shape of the cv::Mat object, and the pointer is the data pointer of the cv::Mat object.
-    py::array_t<uint8_t> array(
-        {mat.rows, mat.cols, mat.channels()}, // shape
-        mat.data); // pointer to the memory block
+    // The constructor of pybind11 numpy array takes a shape and a pointer to
+    // the memory block. The shape is the shape of the cv::Mat object, and the
+    // pointer is the data pointer of the cv::Mat object.
+    py::array_t<uint8_t> array({mat.rows, mat.cols, mat.channels()},  // shape
+                               mat.data);  // pointer to the memory block
     return array;
 }
 
@@ -53,7 +54,7 @@ py::array_t<uint8_t> mat_to_numpy(const cv::Mat &mat) {
  * @param config the configuration file for the image processing.
  * @param img_path the path to the image to be processed.
  */
-ImageProcessor::ImageProcessor(const std::string &config, const std::string &img_path) {
+ImageProcessor::ImageProcessor(const std::string& config, const std::string& img_path) {
     // demo inputs
     // create a shared pointer to a float array
     params = std::make_shared<float*>(new float[10]);
@@ -64,16 +65,27 @@ ImageProcessor::ImageProcessor(const std::string &config, const std::string &img
 }
 
 /**
- * @brief Process an image according to the configuration and options.
+ * @brief Process an image according to the configuration and Options.
  *
- * @param opts the options for the image processing.
+ * @param opts the Options for the image processing.
  * @return the processed image.
  */
-cv::Mat ImageProcessor::process(const options &opts) {
+cv::Mat ImageProcessor::process(const Options& opts) {
     // For now, just return the original image.
     // In the future, this function should be implemented to process the image
-    // according to the configuration and options.
+    // according to the configuration and Options.
     return *p_img;
+}
+
+ForwardType ImageProcessor::forward(const Options& opts) {
+    // For now, just return the original image.
+    // In the future, this function should be implemented to process the image
+    // according to the configuration and Options.
+    ForwardType forward_output;
+    forward_output.vbuffer_a  = {1, 2, 3};
+    forward_output.vvbuffer_b = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    forward_output.vbuffer_c  = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    return forward_output;
 }
 
 /**
@@ -89,50 +101,58 @@ ImageProcessor::~ImageProcessor() {
  *
  * @param m the module to which the enum will be bound.
  */
-void BindFeatureType(py::module &m) {
+void BindFeatureType(py::module& m) {
     // Create a pybind11 enum_ object for the FeatureType enum
     // and bind it to the module.
     py::enum_<FeatureType>(m, "FeatureType")
-    // Assign each enum value to a corresponding Python value.
-    .value("HOG", FeatureType::HOG, "Histogram of Oriented Gradients")
-    .value("SIFT", FeatureType::SIFT, "Scale-Invariant Feature Transform")
-    .value("SURF", FeatureType::SURF, "Speeded-Up Robust Features")
-    .value("SP", FeatureType::SP, "Simple Precision")
-    // Export the values of the enum.
-    .export_values();
+        // Assign each enum value to a corresponding Python value.
+        .value("HOG", FeatureType::HOG, "Histogram of Oriented Gradients")
+        .value("SIFT", FeatureType::SIFT, "Scale-Invariant Feature Transform")
+        .value("SURF", FeatureType::SURF, "Speeded-Up Robust Features")
+        .value("SP", FeatureType::SP, "Simple Precision")
+        // Export the values of the enum.
+        .export_values();
 }
 
 /**
- * @brief Binds the options class to the given module.
+ * @brief Binds the Options class to the given module.
  *
  * @param m the module to which the class will be bound.
  */
-void BindOptions(py::module &m) {
-    // Create a pybind11 class_ object for the options class
+void BindOptions(py::module& m) {
+    // Create a pybind11 class_ object for the Options class
     // and bind it to the module.
-    py::class_<options> options_class(m, "options");
+    py::class_<Options> options_class(m, "Options");
 
     // Add a docstring to the class
-    options_class.doc() = "A class to represent options";
+    options_class.doc() = "A class to represent Options";
 
     // Add an __init__ method
     options_class.def(py::init<>());
 
     // Add readwrite properties
-    options_class.def_readwrite("filename", &options::filename);
-    options_class.def_readwrite("params", &options::params);
+    options_class.def_readwrite("filename", &Options::filename);
+    options_class.def_readwrite("params", &Options::params);
 
     // Add a property for the image
     options_class.def_property(
         "image",
-        [](options &o) { // getter
+        [](Options& o) {  // getter
             // Convert the image to a numpy array
             return mat_to_numpy(o.image);
         },
-        [](options &o, py::array_t<uint8_t> img) { // setter
+        [](Options& o, py::array_t<uint8_t> img) {  // setter
             // Convert the numpy array to an image
             o.image = numpy_to_mat(img);
         });
+}
+
+void BindForwardType(py::module& m) {
+    py::class_<ForwardType>(m, "ForwardType")
+        .def(py::init<>())
+        .def_readwrite("vbuffer_a", &ForwardType::vbuffer_a)
+        .def_readwrite("vvbuffer_b", &ForwardType::vvbuffer_b)
+        .def_readwrite("vbuffer_c", &ForwardType::vbuffer_c);
 }
 
 /**
@@ -140,7 +160,7 @@ void BindOptions(py::module &m) {
  *
  * @param m the module to which the class will be bound.
  */
-void BindImageProcessor(py::module &m) {
+void BindImageProcessor(py::module& m) {
     // Create a pybind11 class_ object for the ImageProcessor class
     // and bind it to the module.
     py::class_<ImageProcessor> image_processor_class(m, "ImageProcessor");
@@ -149,13 +169,27 @@ void BindImageProcessor(py::module &m) {
     image_processor_class.doc() = "A class to process images";
 
     // Add an __init__ method
-    image_processor_class.def(py::init<const std::string &, const std::string &>(),
-                              py::arg("config"), py::arg("img_path"));
+    image_processor_class.def(py::init<const std::string&, const std::string&>(),
+                              py::arg("config"),
+                              py::arg("img_path"));
 
     // Add a process method
-    image_processor_class.def("process", [](ImageProcessor &self, const options &opts) {
-        // Call the process method on the ImageProcessor object
-        // and convert the result to a numpy array
-        return mat_to_numpy(self.process(opts));
-    }, py::arg("opts"));
+    image_processor_class.def(
+        "process",
+        [](ImageProcessor& self, const Options& opts) {
+            // Call the process method on the ImageProcessor object
+            // and convert the result to a numpy array
+            return mat_to_numpy(self.process(opts));
+        },
+        py::arg("opts"));
+
+    // Add a forward method
+    image_processor_class.def(
+        "forward",
+        [](ImageProcessor& self, const Options& opts) {
+            // Call the forward method on the ImageProcessor object
+            // and convert the result to a numpy array
+            return self.forward(opts);
+        },
+        py::arg("opts"));
 }

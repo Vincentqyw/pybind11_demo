@@ -23,7 +23,7 @@ ci:
 repos:
 # Standard hooks
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.6.0
+  rev: v5.0.0
   hooks:
   - id: check-added-large-files
   - id: check-case-conflict
@@ -38,7 +38,7 @@ repos:
   - id: trailing-whitespace
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: "v0.4.2"
+  rev: "v0.8.4"
   hooks:
     - id: ruff
       args: ["--fix", "--show-fixes"]
@@ -47,7 +47,7 @@ repos:
 
 # Checking static types
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: "v1.10.0"
+  rev: "v1.14.0"
   hooks:
     - id: mypy
       files: "setup.py"
@@ -71,7 +71,7 @@ repos:
     files: (\.cmake|CMakeLists.txt)(.in)?$
 
 # Suggested hook if you add a .clang-format file
-# - repo: https://github.com/pre-commit/mirrors-clang-format
-#  rev: v13.0.0
-#  hooks:
-#  - id: clang-format
+- repo: https://github.com/pre-commit/mirrors-clang-format
+  rev: v13.0.0
+  hooks:
+  - id: clang-format

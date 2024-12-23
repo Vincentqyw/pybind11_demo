@@ -1,4 +1,4 @@
-# small demo for pybind11
+# Tiny demo for pybind11
 
 An example [pybind11](https://github.com/pybind/pybind11) module built with a
 CMake-based build system. This is useful for C++ codebases that have an
@@ -34,6 +34,17 @@ pip install -e .
 With the `setup.py` file included in this example, the `pip install` command will
 invoke CMake and build the pybind11 module as specified in `CMakeLists.txt`.
 
+## Test
+
+```bash
+python -m pytest
+```
+
+## Format code
+
+```bash
+pre-commit run -a  # pip install pre-commit
+```
 
 ## License
 
